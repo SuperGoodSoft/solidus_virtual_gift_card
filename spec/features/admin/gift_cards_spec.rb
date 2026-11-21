@@ -60,7 +60,17 @@ describe "Gift Cards", type: :feature do
     it "can lookup gift card by recipient email" do
       visit spree.admin_gift_cards_path
 
-      fill_in "q[recipient_email_cont]", with: gift_card.recipient_email
+      fill_in "q[recipient_email_i_cont]", with: gift_card.recipient_email
+      click_button "Lookup Gift Card"
+
+      expect(page).to have_content(gift_card.purchaser.email)
+      expect(page).not_to have_content(other_gift_card.purchaser.email)
+    end
+
+    it "can lookup gift card by recipient email regardless of case" do
+      visit spree.admin_gift_cards_path
+
+      fill_in "q[recipient_email_i_cont]", with: gift_card.recipient_email.upcase
       click_button "Lookup Gift Card"
 
       expect(page).to have_content(gift_card.purchaser.email)
@@ -70,7 +80,7 @@ describe "Gift Cards", type: :feature do
     it "can lookup gift card by order number" do
       visit spree.admin_gift_cards_path
 
-      fill_in "q[order_number_cont]", with: order.number
+      fill_in "q[order_number_i_cont]", with: order.number
       click_button "Lookup Gift Card"
 
       expect(page).to have_content(gift_card.purchaser.email)
